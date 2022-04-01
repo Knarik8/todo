@@ -1,18 +1,19 @@
 import React from "react";
-import {BoxMenu, Row, Column, MenuLink} from "./MenuStyles";
+import {BoxMenu, Row, Column} from "./MenuStyles";
+import {Link} from "react-router-dom"
 
 const MenuItem = () => {
 return(
     <BoxMenu>
         <Row>
           <Column>
-            <MenuLink href="#">Projects</MenuLink>
+            <Link to='/'>Users</Link>
           </Column>
-            <Column>
-            <MenuLink href="#">Contacts</MenuLink>
+          <Column>
+            <Link to='/projects'>Projects</Link>
           </Column>
-            <Column>
-            <MenuLink href="#">About Us</MenuLink>
+          <Column>
+            <Link to='/todos'>Todos</Link>
           </Column>
         </Row>
     </BoxMenu>
