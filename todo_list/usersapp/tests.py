@@ -82,10 +82,8 @@ class TestProjectViewSet(APITestCase):
         self.password = 'admin'
         self.email = 'admin@mail.ru'
         self.data_user = {'first_name': 'Иван', 'last_name': 'Иванов', 'email': 'ivan55@ivan.ru'}
-        # self.user = CustomUser.objects.create(**self.data_user)
-
-        # self.data = {'title': 'TitleCreate', 'link': 'https://github.com/Knarik8/todo', 'users': self.user}
-        self.data_pj = {'title': 'TitleCreate', 'link': 'https://github.com/Knarik8/todo'}
+        self.user = CustomUser.objects.create(**self.data_user)
+        self.data = {'title': 'TitleCreate', 'link': 'https://github.com/Knarik8/todo'}
         # self.data_put = {'title': 'TitleUpdate', 'link': 'https://github.com/Knarik8/todo', 'users': self.user}
 
         self.url = '/api/projects/'
@@ -96,15 +94,12 @@ class TestProjectViewSet(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_put_admin(self):
-        project = Project.objects.create(**self.data_pj)
-        user = CustomUser.objects.create(**self.data_user)
-        project.users.add(user)
-        project_update = Project.objects.create(title='TitleUpdate', link='https://github.com/Knarik8/todo')
-        project_update.users.add(user)
+        project = Project.objects.create(**self.data)
+        project.users.set([self.user.id])
         self.client.login(username=self.name, password=self.password)
-        response = self.client.put(f'{self.url}{project.id}/', {'title': 'TitleUpdate', 'link': 'https://github.com/Knarik8/todo', 'users': project.users})
-        print(response.status_code)
+        response = self.client.put(f'{self.url}{project.id}/', {'title': 'TitleUpdate', 'link': 'https://github.com/Knarik8/todo', 'users': [self.user.id]})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
         project_update = Project.objects.get(id=project.id)
         self.assertEqual(project_update.title, 'TitleUpdate')
         self.client.logout()
@@ -114,7 +109,7 @@ class TestProjectViewSet(APITestCase):
         self.client.login(username=self.name, password=self.password)
         response = self.client.put(f'{self.url}{project.id}/',
                                    {'title': 'TitleUpdate', 'link': 'https://github.com/Knarik8/todo',
-                                    'users': project.users})
+                                    'users': [self.user.id]})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         project_1 = Project.objects.get(id=project.id)
         self.assertEqual(project_1.title, 'TitleUpdate')
@@ -126,7 +121,7 @@ class TestProjectViewSet(APITestCase):
         self.client.login(username=self.name, password=self.password)
         response = self.client.put(f'{self.url}{project.id}/',
                                    {'title': 'TitleUpdate', 'link': 'https://github.com/Knarik8/todo',
-                                    'users': project.users})
+                                    'users': [self.user.id]})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         project_1 = Project.objects.get(id=project.id)
         self.assertEqual(project_1.title, 'TitleUpdate')
