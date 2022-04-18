@@ -16,11 +16,29 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from graphene_django.views import GraphQLView
+from rest_framework import permissions
 from rest_framework.authtoken import views
 
 from rest_framework.routers import DefaultRouter
 from usersapp.views import CustomUserCustomViewSet
 from todoapp.views import ProjectModelViewSet, TodoModelViewSet
+
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title='Todo',
+        default_version = 'v2',
+        description = 'My project',
+        contact=openapi.Contact(email='test@mail.ru'),
+        license=openapi.License(name='MT')
+    ),
+    public=True,
+    # permission_classes=(permissions.IsAdminUser,)
+)
+
 
 router = DefaultRouter()
 # router.register('users', CustomUserModelViewSet)
@@ -34,19 +52,11 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api-token-auth/', views.obtain_auth_token),
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     path('graphql/', GraphQLView.as_view(graphiql=True))
+    path('swagger/', schema_view.with_ui('swagger')),
+    path('redoc/', schema_view.with_ui('redoc')),
+    # path('swagger<str:format>/', schema_view.without_ui()),
+    # path('api/<str:version>/users/', CustomUserCustomViewSet.as_view({'get': 'list'}))
+    # path('api/<users>/v1/', include('usersapp.urls', namespace='v1')),
+    # path('api/<users>/v2/', include('usersapp.urls', namespace='v2'))
 ]
