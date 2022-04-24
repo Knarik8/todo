@@ -31,7 +31,7 @@ class App extends React.Component {
       console.log(title, link, users)
       const headers = this.get_headers()
       const data = {title:title, link:link, users:users}
-      axios.post(`http://127.0.0.1:8000/api/projects/`, {headers}).then(
+      axios.post(`http://127.0.0.1:8000/api/projects/`, data,{headers}).then(
           response => {
             this.load_data()
           }
