@@ -28,12 +28,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    # 'http://127.0.0.1:3000',
+    'http://0.0.0.0:80',
 ]
-
-
+CORS_ALLOW_ALL_ORIGINS = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -88,10 +87,21 @@ WSGI_APPLICATION = 'todo_list.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'db',
+        'PASSWORD': '1',
+        'USER': 'Armin',
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
 
